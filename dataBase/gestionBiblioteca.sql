@@ -16,6 +16,27 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`gestionbiblioteca` /*!40100 DEFAULT CHA
 
 USE `gestionbiblioteca`;
 
+/*Table structure for table `cuentas` */
+
+DROP TABLE IF EXISTS `cuentas`;
+
+CREATE TABLE `cuentas` (
+  `id_cuenta` int NOT NULL AUTO_INCREMENT,
+  `nombre_usuario` varchar(50) NOT NULL,
+  `contraseña` varchar(255) NOT NULL,
+  `cargo` varchar(20) NOT NULL DEFAULT 'BIBLIOTECARIO',
+  `estado` tinyint(1) NOT NULL DEFAULT '1',
+  `fecha_creacion` date NOT NULL,
+  PRIMARY KEY (`id_cuenta`),
+  UNIQUE KEY `nombre_usuario` (`nombre_usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Data for the table `cuentas` */
+
+LOCK TABLES `cuentas` WRITE;
+
+UNLOCK TABLES;
+
 /*Table structure for table `libro` */
 
 DROP TABLE IF EXISTS `libro`;

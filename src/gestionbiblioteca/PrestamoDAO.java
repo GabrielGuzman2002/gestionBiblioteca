@@ -19,9 +19,9 @@ public class PrestamoDAO {
     public List<Object[]> listarPrestamosActivos() {
         List<Object[]> lista = new ArrayList<>();
 
-        String sql = "Select p.id_codigo, m.titulo, p.id_usuario, CONCAT(u.nombre, ' ', u.apellido) AS usuario"
+        String sql = "Select  p.id_prestamo, p.id_codigo, m.titulo, p.id_usuario, CONCAT(u.nombre, ' ', u.apellido), AS usuario"
                 + "p.fecha_prestamo, p.fecha_devolucion_prevista From prestamo p "
-                + "inner join material_bibliografico m on p.idcodigo = m.id_codigo "
+                + "inner join material_bibliografico m on p.id_codigo = m.id_codigo "
                 + "inner join usuario u on p.id_usuario = u.id_usuario where p.activo = true ";
 
         try (Connection con = Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -45,7 +45,7 @@ public class PrestamoDAO {
 
     //4.3,4.4 se hace el registro de las devoluciones y actualiza lo que esta disponible
     public boolean registrarDevolucion(String idPrestamo, String idCodigoMaterial) {
-        String sqlPrestamo = "update prestamo Set fecha_devolucion = ?, activo = falso where id_prestamo = ? and activo = true";
+        String sqlPrestamo = "update prestamo Set fecha_devolucion = ?, activo = false where id_prestamo = ? and activo = true";
         String sqlMaterial = "update material_bibliografico  set disponible = true where id_codigo = ?";
 
         Connection con = null;
@@ -102,7 +102,7 @@ public class PrestamoDAO {
         String sql = "Select p.id_prestamo, m.titulo, Concat(u.nombre, ' ', u.apelldio) AS usurio"
                 + "p.fecha_devolucion_prevista, p.fecha_devolucion "
                 + "case when p.activo = true 'Activo' else 'Devuelto' end as Estado"
-                + "inner join material_bibliografico m on p.id_codigo = mid.codigo"
+                + "inner join material_bibliografico m on p.id_codigo = id.codigo"
                 + "inner join usuario u on p.id_usuario = u.id_usuario order by p.fecha_prestamo desc";
 
         try (Connection con = Conexion.obtenerConexion(); 

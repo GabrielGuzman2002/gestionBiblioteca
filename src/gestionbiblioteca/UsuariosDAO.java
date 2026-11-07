@@ -40,10 +40,10 @@ public class UsuariosDAO {
         List<Usuario> lista = new ArrayList<>();
 
         String sql;
-        if ("codigo / documento".equals(filtrarPor)) {
-            sql = "SELECT * from usuario where id_usuario like";
+        if ("Codigo / Documento".equals(filtrarPor)) {
+            sql = "SELECT * from usuario where id_usuario like ?";
         } else {
-            sql = "SELECt * from usuario where nombre like ? or apellido o like ?";
+            sql = "SELECt * from usuario where nombre like ? or apellido like ?";
         }
 
         try (Connection con = Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -103,7 +103,7 @@ public class UsuariosDAO {
     
     //2.4 modificar los usuarios
     public boolean modificar(Usuario u){
-     String sql = "Update usuario set nombre = ?, apellido = ?, telefono = ?, correo-electronico = ? where id_usuario = ? ";
+     String sql = "Update usuario set nombre = ?, apellido = ?, telefono = ?, correo_electronico = ? where id_usuario = ? ";
       try (Connection con = Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)){
           
            ps.setString(1, u.getNombre());

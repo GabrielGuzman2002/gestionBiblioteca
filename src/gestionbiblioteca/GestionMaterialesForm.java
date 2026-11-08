@@ -11,10 +11,13 @@ package gestionbiblioteca;
 public class GestionMaterialesForm extends javax.swing.JFrame {
 
     /**
-     * Creates new form GestionMaterialesForm
+     * Crea e inicializa el formulario de gestión de materiales bibliográficos.
      */
     public GestionMaterialesForm() {
         initComponents();
+        
+        // Configurar los campos según el tipo de material inicial.
+        cmbTipoMaterialActionPerformed(null);
     }
 
     /**
@@ -71,6 +74,11 @@ public class GestionMaterialesForm extends javax.swing.JFrame {
         jLabel4.setText("Tipo de material:");
 
         cmbTipoMaterial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Libro", "Revista" }));
+        cmbTipoMaterial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbTipoMaterialActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("ISBN");
 
@@ -81,12 +89,32 @@ public class GestionMaterialesForm extends javax.swing.JFrame {
         jLabel8.setText("Periodicidad:");
 
         btnConsultar.setText("Consultar");
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
 
         btnRegistrar.setText("Registrar");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
 
         btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnLimpiar.setText("Limpiar");
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
@@ -97,10 +125,7 @@ public class GestionMaterialesForm extends javax.swing.JFrame {
 
         tblMateriales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Código", "Tipo", "Título", "Autor", "ISBN / Edición", "Páginas / Periodicidad", "Estado", "Fecha de registro"
@@ -216,7 +241,7 @@ public class GestionMaterialesForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
-        // TODO add your handling code here:
+        // Por ahora no se requiere una acción al presionar Enter.
     }//GEN-LAST:event_txtCodigoActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -236,8 +261,307 @@ txtCodigo.requestFocus();
 
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+    // Obtener los datos ingresados en el formulario.
+String codigo = txtCodigo.getText().trim();
+String titulo = txtTitulo.getText().trim();
+String autor = txtAutor.getText().trim();
+String tipo = cmbTipoMaterial.getSelectedItem().toString();
+
+// Verificar que los campos generales estén completos.
+if (codigo.isEmpty() || titulo.isEmpty() || autor.isEmpty()) {
+    javax.swing.JOptionPane.showMessageDialog(this,
+            "Debe completar el código, título y autor.");
+    return;
+}
+
+try {
+    MaterialDAO dao = new MaterialDAO();
+
+    // Evitar que se registre dos veces el mismo código.
+    if (dao.existeMaterial(codigo)) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Ya existe un material con ese código.");
+        return;
+    }
+
+    boolean registrado = false;
+
+    if (tipo.equalsIgnoreCase("Libro")) {
+
+        String isbn = txtISBN.getText().trim();
+        String textoPaginas = txtPaginas.getText().trim();
+
+        // Validar los datos específicos del libro.
+        if (isbn.isEmpty() || textoPaginas.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Debe ingresar el ISBN y el número de páginas.");
+            return;
+        }
+
+        int paginas = Integer.parseInt(textoPaginas);
+
+        if (paginas <= 0) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "El número de páginas debe ser mayor que cero.");
+            return;
+        }
+
+        Libro libro = new Libro(codigo, titulo, autor, isbn, paginas);
+        libro.setDisponible(true);
+
+        registrado = dao.registrarLibro(libro);
+
+    } else if (tipo.equalsIgnoreCase("Revista")) {
+
+        String textoEdicion = txtNumeroEdicion.getText().trim();
+        String periodicidad = txtPeriodicidad.getText().trim();
+
+        // Validar los datos específicos de la revista.
+        if (textoEdicion.isEmpty() || periodicidad.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Debe ingresar el número de edición y la periodicidad.");
+            return;
+        }
+
+        int numeroEdicion = Integer.parseInt(textoEdicion);
+
+        if (numeroEdicion <= 0) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "El número de edición debe ser mayor que cero.");
+            return;
+        }
+
+        Revista revista = new Revista(codigo, titulo, autor,
+                numeroEdicion, periodicidad);
+        revista.setDisponible(true);
+
+        registrado = dao.registrarRevista(revista);
+    }
+
+    // Informar si el registro fue exitoso.
+    if (registrado) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Material registrado correctamente.");
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "No se pudo registrar el material.");
+    }
+
+} catch (NumberFormatException e) {
+    javax.swing.JOptionPane.showMessageDialog(this,
+            "Las páginas y el número de edición deben ser números enteros.");
+
+} catch (java.sql.SQLException e) {
+    javax.swing.JOptionPane.showMessageDialog(this,
+            "Error al registrar en MySQL: " + e.getMessage());
+}
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+    
+    // Consultar los materiales registrados en la base de datos.
+    try {
+        MaterialDAO dao = new MaterialDAO();
+
+        java.util.List<MaterialBibliografico> materiales =
+                dao.listarMateriales();
+
+        // Obtener la tabla y limpiar los registros anteriores.
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel)
+                tblMateriales.getModel();
+
+        modelo.setRowCount(0);
+
+        // Recorrer los materiales encontrados.
+        for (MaterialBibliografico material : materiales) {
+
+            String tipo = "";
+            String datoEspecifico1 = "";
+            String datoEspecifico2 = "";
+
+            // Identificar si el material es un libro.
+            if (material instanceof Libro) {
+                Libro libro = (Libro) material;
+
+                tipo = "Libro";
+                datoEspecifico1 = libro.getIsbn();
+                datoEspecifico2 = String.valueOf(libro.getPaginas());
+
+            // Identificar si el material es una revista.
+            } else if (material instanceof Revista) {
+                Revista revista = (Revista) material;
+
+                tipo = "Revista";
+                datoEspecifico1 =
+                        String.valueOf(revista.getNumeroEdicion());
+                datoEspecifico2 = revista.getPeriodicidad();
+            }
+
+            String estado = material.isDisponible()
+                    ? "Disponible" : "No disponible";
+
+            // Agregar los datos del material a la tabla.
+            modelo.addRow(new Object[]{
+                material.getCodigo(),
+                tipo,
+                material.getTitulo(),
+                material.getAutor(),
+                datoEspecifico1,
+                datoEspecifico2,
+                estado,
+                ""
+            });
+        }
+
+        // Informar si existen materiales registrados.
+        if (materiales.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "No hay materiales registrados.");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Consulta realizada correctamente.");
+        }
+
+    } catch (java.sql.SQLException e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Error al consultar los materiales: " + e.getMessage());
+    }
+
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+
+    // Obtener los datos del material que se desea modificar.
+    String codigo = txtCodigo.getText().trim();
+    String titulo = txtTitulo.getText().trim();
+    String autor = txtAutor.getText().trim();
+
+    // Verificar que los campos obligatorios estén completos.
+    if (codigo.isEmpty() || titulo.isEmpty() || autor.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Debe ingresar el código, título y autor.");
+        return;
+    }
+
+    // Solicitar confirmación antes de modificar el material.
+    int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de que desea modificar este material?",
+            "Confirmar modificación",
+            javax.swing.JOptionPane.YES_NO_OPTION
+    );
+
+    if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    try {
+        // Utilizar el método de modificación de MaterialDAO.
+        MaterialDAO dao = new MaterialDAO();
+
+        boolean modificado = dao.modificarMaterial(
+                codigo, titulo, autor);
+
+        // Mostrar el resultado de la operación.
+        if (modificado) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Material modificado correctamente.");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "No existe un material con ese código.");
+        }
+
+    } catch (java.sql.SQLException e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Error al modificar el material: " + e.getMessage());
+
+    } catch (IllegalArgumentException e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                e.getMessage());
+    }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+ 
+    // Obtener el código del material que se desea eliminar.
+    String codigo = txtCodigo.getText().trim();
+
+    // Verificar que se haya ingresado un código.
+    if (codigo.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Debe ingresar el código del material que desea eliminar.");
+        return;
+    }
+
+    // Solicitar confirmación antes de eliminar el material.
+    int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de que desea eliminar el material con código "
+                    + codigo + "?",
+            "Confirmar eliminación",
+            javax.swing.JOptionPane.YES_NO_OPTION
+    );
+
+    if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    try {
+        // Utilizar el método de eliminación de MaterialDAO.
+        MaterialDAO dao = new MaterialDAO();
+
+        boolean eliminado = dao.eliminarMaterial(codigo);
+
+        // Mostrar el resultado de la operación.
+        if (eliminado) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Material eliminado correctamente.");
+
+            // Limpiar el código después de eliminar el material.
+            txtCodigo.setText("");
+
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "No existe un material con ese código.");
+        }
+
+    } catch (java.sql.SQLException e) {
+        // Informar si ocurre un error o existen préstamos asociados.
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "No se pudo eliminar el material: " + e.getMessage());
+
+    } catch (IllegalArgumentException e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                e.getMessage());
+    }
+
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void cmbTipoMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoMaterialActionPerformed
+        
+    // Identificar el tipo de material seleccionado.
+    boolean esLibro = "Libro".equals(cmbTipoMaterial.getSelectedItem());
+
+    // Habilitar los campos correspondientes a los libros.
+    txtISBN.setEnabled(esLibro);
+    txtPaginas.setEnabled(esLibro);
+
+    // Habilitar los campos correspondientes a las revistas.
+    txtNumeroEdicion.setEnabled(!esLibro);
+    txtPeriodicidad.setEnabled(!esLibro);
+
+    // Actualizar las etiquetas de los campos.
+    jLabel5.setEnabled(esLibro);
+    jLabel6.setEnabled(esLibro);
+    jLabel7.setEnabled(!esLibro);
+    jLabel8.setEnabled(!esLibro);
+
+    }//GEN-LAST:event_cmbTipoMaterialActionPerformed
+
     /**
-     * @param args the command line arguments
+     * @param args Argumentos recibidos desde la línea de comandos.an
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author GuzZman
  */
-public class GestionDevolucion extends javax.swing.JFrame {
+public class VentanaDevolucionForm extends javax.swing.JFrame {
 
     PrestamoDAO prestamoDAO = new PrestamoDAO();
     DefaultTableModel modeloTabla;
@@ -16,7 +16,7 @@ public class GestionDevolucion extends javax.swing.JFrame {
     /**
      * Creates new form VentanaDevolucion
      */
-    public GestionDevolucion() {
+    public VentanaDevolucionForm() {
         initComponents();
         modeloTabla = (DefaultTableModel) tablaPrestamo.getModel();
        cargarTabla();
@@ -113,14 +113,6 @@ public class GestionDevolucion extends javax.swing.JFrame {
                 btnRegresarActionPerformed(evt);
             }
         });
-
-        txtIdPrestamo.setText("jTextField1");
-
-        txtCodigoMaterial.setText("jTextField2");
-
-        txtUsuario.setText("jTextField3");
-
-        jTextField4.setText("jTextField4");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -267,21 +259,23 @@ public class GestionDevolucion extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GestionDevolucion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaDevolucionForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GestionDevolucion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaDevolucionForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GestionDevolucion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaDevolucionForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GestionDevolucion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaDevolucionForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GestionDevolucion().setVisible(true);
+                new VentanaDevolucionForm().setVisible(true);
             }
         });
     }

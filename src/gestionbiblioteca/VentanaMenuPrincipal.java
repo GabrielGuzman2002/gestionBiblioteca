@@ -15,6 +15,7 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
      */
     public VentanaMenuPrincipal() {
         initComponents();
+         this.setLocationRelativeTo(null);
     }
 
     /**

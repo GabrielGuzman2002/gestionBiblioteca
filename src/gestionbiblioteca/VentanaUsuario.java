@@ -18,6 +18,7 @@ public class VentanaUsuario extends javax.swing.JFrame {
         initComponents();
         modeloTabla = (DefaultTableModel) tablaUsuario.getModel();
         cargarTabla(usuarioDAO.listarTodos());
+         this.setLocationRelativeTo(null);
         
     }
     

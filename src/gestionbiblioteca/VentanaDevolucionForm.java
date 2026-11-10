@@ -20,6 +20,7 @@ public class VentanaDevolucionForm extends javax.swing.JFrame {
         initComponents();
         modeloTabla = (DefaultTableModel) tablaPrestamo.getModel();
        cargarTabla();
+        this.setLocationRelativeTo(null);
     }
 
     public void cargarTabla() {

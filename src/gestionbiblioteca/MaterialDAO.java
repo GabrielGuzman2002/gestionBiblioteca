@@ -1,316 +1,270 @@
 package gestionbiblioteca;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Fernando
+ * 
+ * author FernandoGarcia
+ * Operaciones de la base de datos para los materiales (libros y revistas).
+ * Guarda siempre el tipo, asi el programa sabe si es libro o revista.
  */
 public class MaterialDAO {
 
-    // Comprueba si un material ya está registrado en MySQL.
-    public boolean existeMaterial(String codigo) throws SQLException {
+    // una operacion que se ejecuta dentro de una transaccion
+    private interface Operacion {
+        void ejecutar(Connection con) throws SQLException;
+    }
 
-        String sql = "SELECT 1 FROM material_bibliografico "
-                   + "WHERE id_codigo = ?";
-
-        try (Connection con = Conexion.obtenerConexion()) {
-
+    // si algo falla se deshace todo (no queda guardado a medias)
+    private boolean enTransaccion(Operacion operacion, String mensajeError) {
+        Connection con = null;
+        try {
+            con = Conexion.obtenerConexion();
             if (con == null) {
-                throw new SQLException(
-                    "No se pudo establecer conexión con MySQL."
-                );
+                return false;
             }
-
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-                ps.setString(1, codigo);
-
-                try (ResultSet rs = ps.executeQuery()) {
-                    return rs.next();
+            con.setAutoCommit(false);
+            operacion.ejecutar(con);
+            con.commit();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(mensajeError + ": " + e.getMessage());
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    System.out.println("Error al deshacer los cambios: " + ex.getMessage());
+                }
+            }
+            return false;
+        } finally {
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException ex) {
+                    System.out.println("Error al cerrar la conexion: " + ex.getMessage());
                 }
             }
         }
     }
 
-    // Registra un libro en la base de datos MySQL.
-    public boolean registrarLibro(Libro libro) throws SQLException {
-
-        String sqlMaterial = "INSERT INTO material_bibliografico "
-                + "(id_codigo, titulo, autor, categoria, "
-                + "fecha_registro, disponible) "
-                + "VALUES (?, ?, ?, 'LIBRO', CURRENT_DATE(), ?)";
-
-        String sqlLibro = "INSERT INTO libro "
-                + "(id_codigo, isbn, paginas) VALUES (?, ?, ?)";
-
-        try (Connection con = Conexion.obtenerConexion()) {
-
-            if (con == null) {
-                throw new SQLException(
-                        "No se pudo conectar con MySQL.");
-            }
-
-            con.setAutoCommit(false);
-
-            try (PreparedStatement psMaterial =
-                    con.prepareStatement(sqlMaterial);
-                 PreparedStatement psLibro =
-                    con.prepareStatement(sqlLibro)) {
-
-                psMaterial.setString(1, libro.getCodigo());
-                psMaterial.setString(2, libro.getTitulo());
-                psMaterial.setString(3, libro.getAutor());
-                psMaterial.setBoolean(4, libro.isDisponible());
-
-                psMaterial.executeUpdate();
-
-                psLibro.setString(1, libro.getCodigo());
-                psLibro.setString(2, libro.getIsbn());
-                psLibro.setInt(3, libro.getPaginas());
-
-                psLibro.executeUpdate();
-
-                con.commit();
-                return true;
-
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
-            }
+    private void setAutor(PreparedStatement ps, int indice, String autor) throws SQLException {
+        if (autor == null || autor.trim().isEmpty()) {
+            ps.setNull(indice, Types.VARCHAR);
+        } else {
+            ps.setString(indice, autor);
         }
     }
 
-    // Registra una revista en la base de datos MySQL.
-    public boolean registrarRevista(Revista revista) throws SQLException {
-
-        String sqlMaterial = "INSERT INTO material_bibliografico "
-                + "(id_codigo, titulo, autor, categoria, "
-                + "fecha_registro, disponible) "
-                + "VALUES (?, ?, ?, 'REVISTA', CURRENT_DATE(), ?)";
-
-        String sqlRevista = "INSERT INTO revista "
-                + "(id_codigo, numero_edicion, periodicidad) "
-                + "VALUES (?, ?, ?)";
-
-        try (Connection con = Conexion.obtenerConexion()) {
-
-            if (con == null) {
-                throw new SQLException(
-                        "No se pudo conectar con MySQL.");
-            }
-
-            con.setAutoCommit(false);
-
-            try (PreparedStatement psMaterial =
-                    con.prepareStatement(sqlMaterial);
-                 PreparedStatement psRevista =
-                    con.prepareStatement(sqlRevista)) {
-
-                psMaterial.setString(1, revista.getCodigo());
-                psMaterial.setString(2, revista.getTitulo());
-                psMaterial.setString(3, revista.getAutor());
-                psMaterial.setBoolean(4, revista.isDisponible());
-
-                psMaterial.executeUpdate();
-
-                psRevista.setString(1, revista.getCodigo());
-                psRevista.setInt(2, revista.getNumeroEdicion());
-                psRevista.setString(3, revista.getPeriodicidad());
-
-                psRevista.executeUpdate();
-
-                con.commit();
-                return true;
-
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
-            }
+    private void setVolumen(PreparedStatement ps, int indice, int volumen) throws SQLException {
+        if (volumen > 0) {
+            ps.setInt(indice, volumen);
+        } else {
+            ps.setNull(indice, Types.INTEGER);
         }
     }
 
-    // Consulta todos los libros y revistas registrados.
-    public List<MaterialBibliografico> listarMateriales()
-            throws SQLException {
+    // devuelve la cantidad que cuenta la consulta, o -1 si hubo un error
+    private int contar(String sql, String codigo) {
+        try (Connection con = Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, codigo);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        } catch (SQLException | NullPointerException e) {
+            System.out.println("Error en la consulta: " + e.getMessage());
+            return -1;
+        }
+    }
 
-        List<MaterialBibliografico> materiales = new ArrayList<>();
+    //1.1 verifica que el codigo no se repita
+    public boolean existeCodigo(String codigo) {
+        return contar("SELECT COUNT(*) FROM material_bibliografico WHERE id_codigo = ?", codigo) > 0;
+    }
 
-        String sql = "SELECT m.id_codigo, m.titulo, m.autor, "
-                + "m.categoria, m.disponible, "
-                + "l.isbn, l.paginas, "
-                + "r.numero_edicion, r.periodicidad "
+    //1.7 el material tiene prestamos activos (si hay error se asume que si, por seguridad)
+    public boolean tienePrestamosActivos(String codigo) {
+        return contar("SELECT COUNT(*) FROM prestamo WHERE id_codigo = ? AND activo = true", codigo) != 0;
+    }
+
+    //1.7 el material tiene algun prestamo en el historial (hay que conservar el registro)
+    public boolean tienePrestamos(String codigo) {
+        return contar("SELECT COUNT(*) FROM prestamo WHERE id_codigo = ?", codigo) != 0;
+    }
+
+    //1.1, 1.2, 1.3 registra un libro o una revista (tabla general + tabla especifica)
+    public boolean registrar(MaterialBibliografico m) {
+        return enTransaccion(con -> {
+            String sqlBase = "INSERT INTO material_bibliografico (id_codigo, titulo, autor, tipo, "
+                    + "anio_publicacion, editorial, cantidad_disponible, fecha_registro, disponible) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?)";
+            try (PreparedStatement ps = con.prepareStatement(sqlBase)) {
+                ps.setString(1, m.getCodigo());
+                ps.setString(2, m.getTitulo());
+                setAutor(ps, 3, m.getAutor());
+                ps.setString(4, m.getTipo());
+                ps.setInt(5, m.getAnioPublicacion());
+                ps.setString(6, m.getEditorial());
+                ps.setInt(7, m.getCantidad());
+                ps.setDate(8, Date.valueOf(LocalDate.now()));
+                ps.setBoolean(9, m.getCantidad() > 0);
+                ps.executeUpdate();
+            }
+
+            if (m instanceof Libro) {
+                Libro l = (Libro) m;
+                try (PreparedStatement ps = con.prepareStatement(
+                        "INSERT INTO libro (id_codigo, isbn, paginas) VALUES (?,?,?)")) {
+                    ps.setString(1, l.getCodigo());
+                    ps.setString(2, l.getIsbn());
+                    ps.setInt(3, l.getPaginas());
+                    ps.executeUpdate();
+                }
+            } else if (m instanceof Revista) {
+                Revista r = (Revista) m;
+                try (PreparedStatement ps = con.prepareStatement(
+                        "INSERT INTO revista (id_codigo, numero_edicion, periodicidad, volumen) VALUES (?,?,?,?)")) {
+                    ps.setString(1, r.getCodigo());
+                    ps.setInt(2, r.getNumeroEdicion());
+                    ps.setString(3, r.getPeriodicidad());
+                    setVolumen(ps, 4, r.getVolumen());
+                    ps.executeUpdate();
+                }
+            } else {
+                throw new SQLException("Tipo de material desconocido");
+            }
+        }, "Error no se ha podido registrar el material");
+    }
+
+    //1.6 modifica los datos permitidos (el codigo y el tipo no se cambian)
+    public boolean modificar(MaterialBibliografico m) {
+        return enTransaccion(con -> {
+            String sqlBase = "UPDATE material_bibliografico SET titulo = ?, autor = ?, "
+                    + "anio_publicacion = ?, editorial = ?, cantidad_disponible = ?, disponible = ? "
+                    + "WHERE id_codigo = ?";
+            try (PreparedStatement ps = con.prepareStatement(sqlBase)) {
+                ps.setString(1, m.getTitulo());
+                setAutor(ps, 2, m.getAutor());
+                ps.setInt(3, m.getAnioPublicacion());
+                ps.setString(4, m.getEditorial());
+                ps.setInt(5, m.getCantidad());
+                ps.setBoolean(6, m.getCantidad() > 0);
+                ps.setString(7, m.getCodigo());
+                if (ps.executeUpdate() == 0) {
+                    throw new SQLException("El material " + m.getCodigo() + " no existe");
+                }
+            }
+
+            if (m instanceof Libro) {
+                Libro l = (Libro) m;
+                try (PreparedStatement ps = con.prepareStatement(
+                        "UPDATE libro SET isbn = ?, paginas = ? WHERE id_codigo = ?")) {
+                    ps.setString(1, l.getIsbn());
+                    ps.setInt(2, l.getPaginas());
+                    ps.setString(3, l.getCodigo());
+                    ps.executeUpdate();
+                }
+            } else if (m instanceof Revista) {
+                Revista r = (Revista) m;
+                try (PreparedStatement ps = con.prepareStatement(
+                        "UPDATE revista SET numero_edicion = ?, periodicidad = ?, volumen = ? WHERE id_codigo = ?")) {
+                    ps.setInt(1, r.getNumeroEdicion());
+                    ps.setString(2, r.getPeriodicidad());
+                    setVolumen(ps, 3, r.getVolumen());
+                    ps.setString(4, r.getCodigo());
+                    ps.executeUpdate();
+                }
+            }
+        }, "Error no se ha podido modificar el material");
+    }
+
+    //1.7 elimina el material (el formulario revisa antes que no tenga prestamos)
+    public boolean eliminar(String codigo) {
+        return enTransaccion(con -> {
+            for (String sql : new String[]{
+                "DELETE FROM libro WHERE id_codigo = ?",
+                "DELETE FROM revista WHERE id_codigo = ?",
+                "DELETE FROM material_bibliografico WHERE id_codigo = ?"}) {
+                try (PreparedStatement ps = con.prepareStatement(sql)) {
+                    ps.setString(1, codigo);
+                    ps.executeUpdate();
+                }
+            }
+        }, "Error no se ha podido eliminar el material");
+    }
+
+    //1.5 consultar el catalogo completo
+    public List<MaterialBibliografico> listarTodos() {
+        return consultar("", null);
+    }
+
+    //1.4 buscar por codigo, titulo, autor o tipo
+    public List<MaterialBibliografico> buscar(String criterio, String filtro) {
+        String columna;
+        switch (filtro) {
+            case "Código":
+                columna = "m.id_codigo";
+                break;
+            case "Título":
+                columna = "m.titulo";
+                break;
+            case "Autor":
+                columna = "m.autor";
+                break;
+            default:
+                columna = "m.tipo";
+        }
+        return consultar("WHERE " + columna + " LIKE ? ", "%" + criterio + "%");
+    }
+
+    // arma objetos Libro o Revista segun el tipo guardado
+    private List<MaterialBibliografico> consultar(String where, String parametro) {
+        List<MaterialBibliografico> lista = new ArrayList<>();
+
+        String sql = "SELECT m.id_codigo, m.titulo, m.autor, m.tipo, m.anio_publicacion, "
+                + "m.editorial, m.cantidad_disponible, l.isbn, l.paginas, "
+                + "r.numero_edicion, r.periodicidad, r.volumen "
                 + "FROM material_bibliografico m "
                 + "LEFT JOIN libro l ON m.id_codigo = l.id_codigo "
                 + "LEFT JOIN revista r ON m.id_codigo = r.id_codigo "
-                + "ORDER BY m.titulov";
+                + where
+                + "ORDER BY m.fecha_registro DESC, m.id_codigo";
 
-        try (Connection con = Conexion.obtenerConexion()) {
-
-            if (con == null) {
-                throw new SQLException(
-                        "No se pudo conectar con MySQL.");
+        try (Connection con = Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+            if (parametro != null) {
+                ps.setString(1, parametro);
             }
-
-            try (PreparedStatement ps = con.prepareStatement(sql);
-                 ResultSet rs = ps.executeQuery()) {
-
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-
                     String codigo = rs.getString("id_codigo");
-                    String titulo = rs.getString("titulov");
-                    String autor = rs.getString("autor");
-                    String categoria = rs.getString("categoria");
-                    boolean disponible = rs.getBoolean("disponible");
+                    String titulo = rs.getString("titulo");
+                    String autor = rs.getString("autor") == null ? "" : rs.getString("autor");
+                    int anio = rs.getInt("anio_publicacion");
+                    String editorial = rs.getString("editorial");
+                    int cantidad = rs.getInt("cantidad_disponible");
 
-                    if ("LIBRO".equalsIgnoreCase(categoria)) {
-
-                        Libro libro = new Libro(
-                                codigo,
-                                titulo,
-                                autor,
-                                rs.getString("isbn"),
-                                rs.getInt("paginas")
-                        );
-
-                        libro.setDisponible(disponible);
-                        materiales.add(libro);
-
-                    } else if ("REVISTA".equalsIgnoreCase(categoria)) {
-
-                        Revista revista = new Revista(
-                                codigo,
-                                titulo,
-                                autor,
-                                rs.getInt("numero_edicion"),
-                                rs.getString("periodicidad")
-                        );
-
-                        revista.setDisponible(disponible);
-                        materiales.add(revista);
+                    if ("REVISTA".equals(rs.getString("tipo"))) {
+                        lista.add(new Revista(codigo, titulo, autor, anio, editorial, cantidad,
+                                rs.getInt("numero_edicion"), rs.getString("periodicidad"),
+                                rs.getInt("volumen")));
+                    } else {
+                        lista.add(new Libro(codigo, titulo, autor, anio, editorial, cantidad,
+                                rs.getString("isbn"), rs.getInt("paginas")));
                     }
                 }
             }
+        } catch (SQLException | NullPointerException e) {
+            System.out.println("Error no se ha podido consultar el catalogo: " + e.getMessage());
         }
-
-        return materiales;
+        return lista;
     }
-
-    // Modifica los datos generales de un material bibliografico.
-    public boolean modificarMaterial(String codigo, String titulo,
-            String autor) throws SQLException {
-
-        // Validar que los campos no esten vacios.
-        if (codigo == null || codigo.isBlank()
-                || titulo == null || titulo.isBlank()
-                || autor == null || autor.isBlank()) {
-
-            throw new IllegalArgumentException(
-                    "Todos los campos son obligatorios.");
-        }
-
-        String sql = "UPDATE material_bibliografico "
-                + "SET titulo = ?, autor = ? "
-                + "WHERE id_codigo = ?";
-
-        try (Connection con = Conexion.obtenerConexion()) {
-
-            if (con == null) {
-                throw new SQLException(
-                        "No se pudo conectar con MySQL.");
-            }
-
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-                ps.setString(1, titulo.trim());
-                ps.setString(2, autor.trim());
-                ps.setString(3, codigo.trim());
-
-                return ps.executeUpdate() > 0;
-            }
-        }
-    }
-
-    // Elimina un material si no tiene prestamos registrados.
-    public boolean eliminarMaterial(String codigo) throws SQLException {
-
-        if (codigo == null || codigo.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Debe ingresar el codigo del material.");
-        }
-
-        String sqlPrestamos = "SELECT 1 FROM prestamo "
-                + "WHERE id_codigo = ? LIMIT 1";
-
-        String sqlLibro = "DELETE FROM libro WHERE id_codigo = ?";
-        String sqlRevista = "DELETE FROM revista WHERE id_codigo = ?";
-        String sqlMaterial = "DELETE FROM material_bibliografico "
-                + "WHERE id_codigo = ?";
-
-        try (Connection con = Conexion.obtenerConexion()) {
-
-            if (con == null) {
-                throw new SQLException(
-                        "No se pudo conectar con MySQL.");
-            }
-
-            con.setAutoCommit(false);
-
-            try {
-                // Comprobar si existen prestamos asociados.
-                try (PreparedStatement ps =
-                        con.prepareStatement(sqlPrestamos)) {
-
-                    ps.setString(1, codigo);
-
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            throw new SQLException(
-                                    "No se puede eliminar el material "
-                                    + "porque tiene prestamos registrados.");
-                        }
-                    }
-                }
-
-                // Eliminar datos especificos del libro.
-                try (PreparedStatement ps =
-                        con.prepareStatement(sqlLibro)) {
-
-                    ps.setString(1, codigo);
-                    ps.executeUpdate();
-                }
-
-                // Eliminar datos especificos de la revista.
-                try (PreparedStatement ps =
-                        con.prepareStatement(sqlRevista)) {
-
-                    ps.setString(1, codigo);
-                    ps.executeUpdate();
-                }
-
-                // Eliminar el registro principal.
-                int filas;
-
-                try (PreparedStatement ps =
-                        con.prepareStatement(sqlMaterial)) {
-
-                    ps.setString(1, codigo);
-                    filas = ps.executeUpdate();
-                }
-
-                con.commit();
-                return filas > 0;
-
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
-            }
-        }
-    }
-        
 }

@@ -16,6 +16,14 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
     public VentanaMenuPrincipal() {
         initComponents();
          this.setLocationRelativeTo(null);
+         
+         //si no es el adminisrradir, se limitan las opciones que el administrador puede usar
+         if(!Sesion.esAdmin()){
+             //Solo el administrador podra generar los reportes
+             btnGenerarReporte.setEnabled(false);
+             
+             btnGenerarReporte.setToolTipText("Acceso denegado, solo el administrador puede generar reportes");
+         }
     }
 
     /**

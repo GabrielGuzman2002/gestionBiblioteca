@@ -186,10 +186,11 @@ public class Login extends javax.swing.JFrame {
          return;
      }
      
-     if (usuario.equals("root") && contrasena.equals("admin")){
-         javax.swing.JOptionPane.showMessageDialog(this, "Bienvenido al sistema de gestion de biblioteca", "Acceso concedido", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+     CuentaDAO cuenta = new CuentaDAO();
+     if (cuenta.validarLogin(usuario, contrasena)){
+         javax.swing.JOptionPane.showMessageDialog(this, "Bienvenido " + Sesion.usuarioActual + "\n Cargo" + Sesion.cargoActual, " Acceso autorizado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
          
-         //se abre el menu principal
+          //se abre el menu principal
          new VentanaMenuPrincipal().setVisible(true);
          
          //Cierra la ventana de login

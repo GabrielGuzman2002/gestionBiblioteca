@@ -19,7 +19,7 @@ public class PrestamoDAO {
     public List<Object[]> listarPrestamosActivos() {
         List<Object[]> lista = new ArrayList<>();
 
-        String sql = "Select  p.id_prestamo, p.id_codigo, m.titulo, p.id_usuario, CONCAT(u.nombre, ' ', u.apellido), AS usuario"
+        String sql = "Select  p.id_prestamo, p.id_codigo, m.titulo, p.id_usuario, CONCAT(u.nombre, u.apellido) AS usuario , "
                 + "p.fecha_prestamo, p.fecha_devolucion_prevista From prestamo p "
                 + "inner join material_bibliografico m on p.id_codigo = m.id_codigo "
                 + "inner join usuario u on p.id_usuario = u.id_usuario where p.activo = true ";
@@ -33,7 +33,7 @@ public class PrestamoDAO {
                     rs.getString("id_usuario"),
                     rs.getString("usuario"),
                     rs.getString("fecha_prestamo"),
-                    rs.getString("fechca_devolucion_prevista")
+                    rs.getString("fecha_devolucion_prevista")
 
                 });
             }
@@ -99,10 +99,10 @@ public class PrestamoDAO {
     public List<Object[]> listaHistorialCompleta() {
         List<Object[]> lista = new ArrayList<>();
 
-        String sql = "Select p.id_prestamo, m.titulo, Concat(u.nombre, ' ', u.apelldio) AS usurio"
+        String sql = "Select p.id_prestamo, m.titulo, Concat(u.nombre, u.apellido) AS usurio"
                 + "p.fecha_devolucion_prevista, p.fecha_devolucion "
-                + "case when p.activo = true 'Activo' else 'Devuelto' end as Estado"
-                + "inner join material_bibliografico m on p.id_codigo = id.codigo"
+                + "case then when p.activo = true 'Activo' else 'Devuelto' end as Estado "
+                + "inner join material_bibliografico m on p.id_codigo = m.id_codigo"
                 + "inner join usuario u on p.id_usuario = u.id_usuario order by p.fecha_prestamo desc";
 
         try (Connection con = Conexion.obtenerConexion(); 

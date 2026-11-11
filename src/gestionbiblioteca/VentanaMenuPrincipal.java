@@ -46,6 +46,7 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
         btnGenerarReporte = new javax.swing.JButton();
         btnPrestar = new javax.swing.JButton();
         btnDevoluciones = new javax.swing.JButton();
+        btnAgregarUsuario = new javax.swing.JButton();
         pnlMenu = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -102,17 +103,17 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
             }
         });
 
+        btnAgregarUsuario.setText("Crear usuario");
+        btnAgregarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarUsuarioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlContenidoLayout = new javax.swing.GroupLayout(pnlContenido);
         pnlContenido.setLayout(pnlContenidoLayout);
         pnlContenidoLayout.setHorizontalGroup(
             pnlContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlContenidoLayout.createSequentialGroup()
-                .addGap(157, 157, 157)
-                .addGroup(pnlContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnlContenidoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,6 +130,18 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGenerarReporte)
                         .addGap(12, 12, 12))))
+            .addGroup(pnlContenidoLayout.createSequentialGroup()
+                .addGroup(pnlContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlContenidoLayout.createSequentialGroup()
+                        .addGap(157, 157, 157)
+                        .addGroup(pnlContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlContenidoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnAgregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlContenidoLayout.setVerticalGroup(
             pnlContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,7 +156,9 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
                     .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDevoluciones, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrestar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnAgregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -225,9 +240,7 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnlContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)))
+                    .addComponent(pnlContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -284,13 +297,13 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
                    java.sql.ResultSet rs = ps.executeQuery()){
                    
                    if (rs.next()){
-                       totalUsuarios  = rs.getInt(1);  
+                       totalMateriales = rs.getInt(1);  
                        librosDisponibles = rs.getInt(2);
-                     }
+          }
        }
            
            //conteo de los usuarios
-           try (java.sql.PreparedStatement ps = con.prepareStatement("Select Count (*) from usuarui");
+           try (java.sql.PreparedStatement ps = con.prepareStatement("Select Count (*) from usuario");
                    java.sql.ResultSet rs = ps.executeQuery()){
                if (rs.next()){
                    totalUsuarios = rs.getInt(1);
@@ -301,7 +314,7 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
            //conteo de los prestamos
            try (java.sql.PreparedStatement ps = con.prepareStatement("Select " + "sum"
                    + "(case when activo = true then 1 else 0 end)," +
-                   "Sum(case when activo = false then 1 else 0 end)" + "from prestamo");
+                   "Sum(case when activo = false then 1 else 0 end) " + "from prestamo");
                    java.sql.ResultSet rs = ps.executeQuery()){
                if (rs.next()){
                    
@@ -345,6 +358,46 @@ catch (java.sql.SQLException e){
       
     }//GEN-LAST:event_btnPrestarActionPerformed
 
+    private void btnAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarUsuarioActionPerformed
+
+        //Panel con los campos qeu se usara para crear el nuevo usuario
+        javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridLayout(4,2,5,5));
+
+        javax.swing.JTextField txtNuevoUsuario = new javax.swing.JTextField();
+        javax.swing.JPasswordField txtNuevoContrasena = new javax.swing.JPasswordField();
+
+        javax.swing.JComboBox<String> cmbCargo = new javax.swing.JComboBox<>(new String []{ " Bibliotecario", "Usuario"});
+
+        panel.add(new javax.swing.JLabel("Nuevo usuario: "));
+        panel.add(txtNuevoUsuario);
+        panel.add(new javax.swing.JLabel("Contraseña: "));
+        panel.add(txtNuevoContrasena);
+        panel.add(new javax.swing.JLabel("Cargo / Rol: "));
+        panel.add(cmbCargo);
+
+        int resultado = javax.swing.JOptionPane.showConfirmDialog(this, panel, "Crear nueva cuenta", javax.swing.JOptionPane.OK_CANCEL_OPTION);
+
+        if (resultado == javax.swing.JOptionPane.OK_OPTION){
+            String usuario = txtNuevoUsuario.getText().trim();
+            String contrasena = new String(txtNuevoContrasena.getPassword()).trim();
+            String cargo = cmbCargo.getSelectedItem().toString();
+
+            if(usuario.isEmpty() || contrasena.isEmpty()){
+                javax.swing.JOptionPane.showMessageDialog(this, "Debe completar todo lo solicitado", "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return ;
+            }
+
+            CuentaDAO cuenta = new CuentaDAO();
+            if(cuenta.registrarCuenta(usuario, contrasena, cargo)){
+                javax.swing.JOptionPane.showMessageDialog(this, "El nuevo usuario ha sido creado con exito, ya puede iniciar sesion");
+            }
+            else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error: ese nombre de usuario ya se encuntra registrado", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
+    }//GEN-LAST:event_btnAgregarUsuarioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -381,6 +434,7 @@ catch (java.sql.SQLException e){
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregarUsuario;
     private javax.swing.JButton btnDevoluciones;
     private javax.swing.JButton btnGenerarReporte;
     private javax.swing.JButton btnGestionar;

@@ -14,6 +14,7 @@ public class Libro extends MaterialBibliografico {
  
     }
 
+
     //constructor recibe de la clase padre material bibliografico
     public Libro( String codigo, String titulo, String autor, String isbn,int paginas){
        super (codigo, titulo, autor);
@@ -21,8 +22,22 @@ public class Libro extends MaterialBibliografico {
         this.paginas = paginas;
         
     }
+
+    //constructor completo: datos generales + datos propios del libro
+    public Libro(String codigo, String titulo, String autor, int anioPublicacion,
+            String editorial, int cantidad, String isbn,int paginas){
+        super(codigo, titulo, autor, anioPublicacion,editorial, cantidad);
+        this.isbn = isbn;
+        this.paginas = paginas; 
+    }
+    
+    @Override 
+    public String getTipo(){
+        return "LIBRO";
+    }
     
     //metdo que mostrara la informacion que la trea de la clase padre y de la clase libro
+    @Override
     public void mostrarInformacion(){
         super.mostrarInformacion();
         System.out.println("ISBN :" + this.isbn);

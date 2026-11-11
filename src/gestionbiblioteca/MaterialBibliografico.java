@@ -1,6 +1,6 @@
 package gestionbiblioteca;
 /**
- *
+ *Clase base de los materiales de la biblioteca (libros y revistas).
  * @author guzman
  */
 
@@ -12,6 +12,10 @@ public abstract class MaterialBibliografico {
     private String autor;
     private Boolean disponible;
     
+    //datos generales que pide el proceso 1.1 del enunciado
+    private int anioPublicacion;
+    private String editorial;
+    private int cantidad;
     
     public MaterialBibliografico(){
         this.disponible = true;
@@ -25,6 +29,22 @@ public abstract class MaterialBibliografico {
         this.disponible = true;
     }
     
+    
+    
+    //constructor con todos los datos generales
+    public MaterialBibliografico (String codigo, String titulo, String autor, 
+            int anioPublicacion, String editorial, int cantidad) {
+    this(codigo, titulo, autor);
+    this.anioPublicacion = anioPublicacion;
+    this.editorial = editorial;
+    this.cantidad = cantidad; 
+    this.disponible = cantidad > 0;
+    
+  }
+    
+    //cada clase hija dice que tipo de material es ("Libro" o "Revista"
+        public abstract String getTipo();
+
     
     //metodo prestar libro fuera de la bilbioteca
     public void prestar(){
@@ -66,6 +86,24 @@ public abstract class MaterialBibliografico {
     public boolean isDisponible(){
         return disponible; 
     }
+
+    public Boolean getDisponible() {
+        return disponible;
+    }
+
+    public int getAnioPublicacion() {
+        return anioPublicacion;
+    }
+
+    public String getEditorial() {
+        return editorial;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+    
+    
     
     //metodos set
     public void setCodigo(String codigo){
@@ -84,14 +122,33 @@ public abstract class MaterialBibliografico {
         this.disponible = disponible;
     }
 
-    //se mostrara la informacion en consola del material
-    public void mostrarInformacion(){
-        System.out.println("Datos del material Bibliografico");
-        System.out.println("Codigo :" + this.codigo);
-        System.out.println("Titulo :" + this.titulo);
-        System.out.println("Estado :" + (this.disponible ? "Disponible" : "Prestado"));
-        System.out.println("Autor :" + this.autor);
+    public void setDisponible(Boolean disponible) {
+        this.disponible = disponible;
+    }
+
+    public void setAnioPublicacion(int anioPublicacion) {
+        this.anioPublicacion = anioPublicacion;
+    }
+
+    public void setEditorial(String editorial) {
+        this.editorial = editorial;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
     }
     
-       
+
+    //se mostrara la informacion en consola del material
+    public void mostrarInformacion(){
+       System.out.println("Datos del material Bibliografico");
+        System.out.println("Codigo :" + this.codigo);
+        System.out.println("Titulo :" + this.titulo);
+        System.out.println("Tipo :" + getTipo());
+        System.out.println("Estado :" + (this.disponible ? "Disponible" : "Prestado"));
+        System.out.println("Autor :" + this.autor);
+        System.out.println("Año de publicacion :" + this.anioPublicacion);
+        System.out.println("Editorial :" + this.editorial);
+        System.out.println("Cantidad disponible :" + this.cantidad);
+    }     
 }

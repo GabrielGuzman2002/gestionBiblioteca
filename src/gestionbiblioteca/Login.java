@@ -37,6 +37,7 @@ public class Login extends javax.swing.JFrame {
         txtContraseña = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        btnAgregarUsuario = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -86,6 +87,13 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        btnAgregarUsuario.setText("¿No tienes cuenta? Registrate aqui");
+        btnAgregarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarUsuarioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -103,6 +111,10 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE))
                         .addComponent(txtUsuario)))
                 .addContainerGap(22, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAgregarUsuario)
+                .addGap(139, 139, 139))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,7 +131,9 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogin)
                     .addComponent(btnSalir))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAgregarUsuario)
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -208,6 +222,48 @@ public class Login extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
 
+    //Boton para crear la cuenta de un usuario nuevo
+    private void btnAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarUsuarioActionPerformed
+       
+        //Panel con los campos qeu se usara para crear el nuevo usuario
+        javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridLayout(4,2,5,5));
+        
+        javax.swing.JTextField txtNuevoUsuario = new javax.swing.JTextField();
+        javax.swing.JPasswordField txtNuevoContrasena = new javax.swing.JPasswordField();
+        
+        
+        javax.swing.JComboBox<String> cmbCargo = new javax.swing.JComboBox<>(new String []{ " Bibliotecario", "Usuario"});
+        
+        panel.add(new javax.swing.JLabel("Nuevo usuario: "));
+        panel.add(txtNuevoUsuario);
+        panel.add(new javax.swing.JLabel("Contraseña: "));
+        panel.add(txtNuevoContrasena);
+        panel.add(new javax.swing.JLabel("Cargo / Rol: "));
+        panel.add(cmbCargo);
+        
+        int resultado = javax.swing.JOptionPane.showConfirmDialog(this, panel, "Crear nueva cuenta", javax.swing.JOptionPane.OK_CANCEL_OPTION);
+        
+        if (resultado == javax.swing.JOptionPane.OK_OPTION){
+            String usuario = txtNuevoUsuario.getText().trim();
+            String contrasena = new String(txtNuevoContrasena.getPassword()).trim();
+            String cargo = cmbCargo.getSelectedItem().toString();
+            
+            if(usuario.isEmpty() || contrasena.isEmpty()){
+                javax.swing.JOptionPane.showMessageDialog(this, "Debe completar todo lo solicitado", "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return ;
+            }
+            
+            CuentaDAO cuenta = new CuentaDAO();
+            if(cuenta.registrarCuenta(usuario, contrasena, cargo)){
+                javax.swing.JOptionPane.showMessageDialog(this, "El nuevo usuario ha sido creado con exito, ya puede iniciar sesion");
+            }
+            else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error: ese nombre de usuario ya se encuntra registrado", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }
+    }//GEN-LAST:event_btnAgregarUsuarioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -244,6 +300,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregarUsuario;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;

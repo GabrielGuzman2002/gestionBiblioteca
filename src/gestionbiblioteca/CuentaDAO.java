@@ -12,6 +12,8 @@ public class CuentaDAO {
     
     //se valida el inicio de sesion desde mysql
     public boolean validarLogin(String usuario, String contrasena){
+        
+        
       String sql = "Select nombre_usuario, cargo, estado from cuentas where nombre_usuario = ? and contrasena = ?";
         
       try(Connection con = Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)){
@@ -20,11 +22,10 @@ public class CuentaDAO {
           
           try(ResultSet rs = ps.executeQuery()){
               if (rs.next()){
-                  String estado = rs.getString("estado");
+                  int estado = rs.getInt("estado");
               
-                  
                   // se valida que la cuenta este inactiva o bloqueada
-                  if ("INACTIVO".equalsIgnoreCase(estado)|| "BLOQUEADO".equalsIgnoreCase(estado)){
+                  if (estado != 1){
                       javax.swing.JOptionPane.showMessageDialog(null, "Esta cuenta se encuentra bloqueada o inactiva, conectese al administrador", "Cuenta deshabilitada", javax.swing.JOptionPane.WARNING_MESSAGE);
                       return false;
                   }
@@ -45,7 +46,7 @@ public class CuentaDAO {
     public boolean registrarCuenta(String usuario, String contrasena, String cargo){
       
         String sql = "Insert into cuentas (nombre_usuario, contrasena,cargo, estado, fecha_creacion)"
-                + "values (?,?,?, 'ACTIVO', CURRET_DATE())";
+                + "values (?,?,?, 1, CURRENT_DATE())";
         try(Connection con = Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)){
             ps.setString(1, usuario);
             ps.setString(2, contrasena);

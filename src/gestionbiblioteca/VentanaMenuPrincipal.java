@@ -6,7 +6,7 @@ package gestionbiblioteca;
 
 /**
  *
- * @author GuzZman
+ * @author Gabriel GuzZman
  */
 public class VentanaMenuPrincipal extends javax.swing.JFrame {
 

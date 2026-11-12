@@ -1,17 +1,36 @@
 package gestionbiblioteca;
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Scanner;
-import java.time.LocalDate;
+import java.time.LocalDate;*/
+
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 /**
- *
+ *Este es el punto de entrada principal del sistema de gestion de biblioteca
+ * lo que se hace es que inicia directamente en la interfazgrafica de la venta
+ * de login
  * @author guzman
  */
 public class Main {
 
     public static void main(String[] args) {
+        
+        try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+               
+                    }catch (Exception e){
+                        // si el programa falla continua por defecto con la ventana de swing  
+                        
+                    }
+        SwingUtilities.invokeLater(() ->
+        {
+            new Login().setVisible(true);
+        });
+        
+    }
+}
 
-        Scanner teclado = new Scanner(System.in);
+       /* Scanner teclado = new Scanner(System.in);
         
         ArrayList<Usuario> usuarios = new ArrayList<>();
         ArrayList<Libro> libro = new ArrayList<>();
@@ -254,4 +273,4 @@ public class Main {
 
         teclado.close();
     }
-}
+}*/

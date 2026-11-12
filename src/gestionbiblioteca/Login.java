@@ -184,11 +184,11 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
      String usuario = txtUsuario.getText().trim();
-     String contrasena = txtContrasena.getText().trim();
+     String contrasena = new String(txtContrasena.getPassword()).trim();
      
      // se validan los campos que no esten vacios
      if (usuario.isEmpty() || usuario.equals("Ingrese su nombre de usuario")|| contrasena.isEmpty()|| contrasena.equals("Ingrese su contraseña")){
-         javax.swing.JOptionPane.showMessageDialog(this, "Por favor ingrese su usuario y su contraseñ", "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE );
+         javax.swing.JOptionPane.showMessageDialog(this, "Por favor ingrese su usuario y su contraseña", "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE );
          return;
      }
      

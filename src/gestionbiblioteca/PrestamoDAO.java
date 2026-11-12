@@ -99,10 +99,11 @@ public class PrestamoDAO {
     public List<Object[]> listaHistorialCompleta() {
         List<Object[]> lista = new ArrayList<>();
 
-        String sql = "Select p.id_prestamo, m.titulo, Concat(u.nombre, u.apellido) AS usurio, "
-                + " p.fecha_prestamo, p.fecha_devolucion_prevista, p.fecha_devolucion "
-                + "case when p.activo = true then 'Activo' else 'Devuelto' end as Estado, "
-                + "inner join material_bibliografico m on p.id_codigo = m.id_codigo"
+        String sql = "Select p.id_prestamo, m.titulo, Concat(u.nombre,' ',u.apellido) AS usuario, "
+                + " p.fecha_prestamo, p.fecha_devolucion_prevista, p.fecha_devolucion, "
+                + "case when p.activo = true then 'Activo' else 'Devuelto' end as Estado "
+                + "from prestamo p "
+                + "inner join material_bibliografico m on p.id_codigo = m.id_codigo "
                 + "inner join usuario u on p.id_usuario = u.id_usuario order by p.fecha_prestamo desc";
 
         try (Connection con = Conexion.obtenerConexion(); 

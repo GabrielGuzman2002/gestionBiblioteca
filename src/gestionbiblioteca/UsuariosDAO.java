@@ -40,17 +40,17 @@ public class UsuariosDAO {
         List<Usuario> lista = new ArrayList<>();
 
         String sql;
-        if ("Codigo / Documento".equals(filtrarPor)) {
+        if ("Codigo".equals(filtrarPor) || "Documento".equals(filtrarPor)) {
             sql = "SELECT * from usuario where id_usuario like ?";
         } else {
-            sql = "SELECt * from usuario where nombre like ? or apellido like ?";
+            sql = "SELECT * from usuario where nombre like ? or apellido like ?";
         }
 
         try (Connection con = Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
             String valor = "%" + criterio + "%";
             ps.setString(1, valor);
 
-            if (!"Codigo / Documento".equals(filtrarPor)) {
+            if (!"Codigo".equals(filtrarPor) && !"Documento".equals(filtrarPor)) {
                 ps.setString(2, valor);
             }
 

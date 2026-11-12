@@ -214,9 +214,9 @@ public class VentanaUsuario extends javax.swing.JFrame {
                                         .addComponent(btnRegistrar)
                                         .addGap(18, 18, 18)
                                         .addComponent(btnModificar)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(btnEliminar)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnEliminar)
+                                        .addGap(18, 18, 18)
                                         .addComponent(btnLimpiar)
                                         .addGap(18, 18, 18)
                                         .addComponent(btnRegresar))
@@ -240,7 +240,7 @@ public class VentanaUsuario extends javax.swing.JFrame {
                                     .addComponent(cmbFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btnMostrarTodos))))))
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -283,7 +283,7 @@ public class VentanaUsuario extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();

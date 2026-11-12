@@ -349,7 +349,7 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
                    + "*Prestados Actualmente: " + (totalMateriales - librosDisponibles) +"\n\n"
                    + "[USUARIOS] \n"
                    + "*Total de usuarios registrados: " + totalUsuarios + "\n\n"
-                   + "[PRESTAMOS Y DEVOLUCIONES]n"
+                   + "[PRESTAMOS Y DEVOLUCIONES]\n"
                    + "*Prestamos Activos (Pendientes): " + prestamosActivos + "\n"
                    + "*Devoluciones que se han completado : " + prestamosDevueltos+ "\n"
                    + "*Total historial de operaciones realizadas: " + (prestamosActivos + prestamosDevueltos)+ "\n\n"

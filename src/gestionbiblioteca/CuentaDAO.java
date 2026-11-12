@@ -61,7 +61,7 @@ public class CuentaDAO {
     
     //se restablecene elc ambiar la contrasena por nombre
     public boolean restablecerContrasena(String usuario, String nuevaContrasena){
-        String sql = "Update cuentas set contraseña = ? where nombre_usuario = ?";
+        String sql = "Update cuentas set contrasena = ? where nombre_usuario = ?";
         
         try (Connection con =  Conexion.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)){
             ps.setString(1, nuevaContrasena);

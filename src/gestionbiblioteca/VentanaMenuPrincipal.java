@@ -30,8 +30,18 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
              
              btnAgregarUsuario.setToolTipText("Acceso denegado, pidale al administrador agregar un nuevo usuario");
          }
+           EstiloApp.aplicarMenuPrincipal(this, pnlMenu, pnlEncabezado, pnlContenido,
+            new javax.swing.JLabel[]{jLabel3, jLabel9},
+            new javax.swing.JLabel[]{jLabel1, jLabel2},
+            new javax.swing.JLabel[]{jLabel4, jLabel5},
+            new javax.swing.JLabel[]{jLabel6, jLabel7, jLabel8},
+            new javax.swing.JButton[]{btnRegistrar, btnPrestar, btnDevoluciones,
+                                      btnGestionar, btnAgregarUsuario, btnGenerarReporte});
     }
-
+         
+  
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -359,6 +369,7 @@ catch (java.sql.SQLException e){
      
        }
     }//GEN-LAST:event_btnGenerarReporteActionPerformed
+
 
     //me llevara al menu de registrar prestamos
     private void btnPrestarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrestarActionPerformed

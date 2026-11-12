@@ -194,7 +194,7 @@ public class Login extends javax.swing.JFrame {
      
      CuentaDAO cuenta = new CuentaDAO();
      if (cuenta.validarLogin(usuario, contrasena)){
-         javax.swing.JOptionPane.showMessageDialog(this, "Bienvenido  " + Sesion.usuarioActual + "\n Cargo" + Sesion.cargoActual, " Acceso autorizado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+         javax.swing.JOptionPane.showMessageDialog(this, "Bienvenido  " + Sesion.usuarioActual + "\n Cargo: " + Sesion.cargoActual, " Acceso autorizado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
          
           //se abre el menu principal
          new VentanaMenuPrincipal().setVisible(true);

@@ -63,7 +63,7 @@ public class FormularioPrestamo extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         PrestamoRegistroDAO.Opcion prototipo
-                = new PrestamoRegistroDAO.Opcion("", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                = new PrestamoRegistroDAO.Opcion("", "");
         cmbUsuario.setPrototypeDisplayValue(prototipo);
         cmbMaterial.setPrototypeDisplayValue(prototipo);
         txtCodigo.setEditable(false);

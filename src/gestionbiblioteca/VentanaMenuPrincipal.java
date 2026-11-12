@@ -24,6 +24,12 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
              
              btnGenerarReporte.setToolTipText("Acceso denegado, solo el administrador puede generar reportes");
          }
+         
+         if (!Sesion.esAdmin()){
+             btnAgregarUsuario.setEnabled(false);
+             
+             btnAgregarUsuario.setToolTipText("Acceso denegado, pidale al administrador agregar un nuevo usuario");
+         }
     }
 
     /**

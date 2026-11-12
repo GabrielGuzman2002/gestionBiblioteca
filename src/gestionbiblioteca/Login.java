@@ -34,9 +34,9 @@ public class Login extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtContraseña = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        txtContrasena = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -58,14 +58,18 @@ public class Login extends javax.swing.JFrame {
         jLabel4.setText("Usuario");
 
         txtUsuario.setBackground(new java.awt.Color(255, 255, 255));
-        txtUsuario.setText("Ingrese su nombre de usuario");
+        txtUsuario.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtUsuarioFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtUsuarioFocusLost(evt);
+            }
+        });
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         jLabel5.setText("Contraseña");
-
-        txtContraseña.setBackground(new java.awt.Color(255, 255, 255));
-        txtContraseña.setText("Ingrese su contraseña");
 
         btnLogin.setBackground(new java.awt.Color(22, 139, 131));
         btnLogin.setFont(new java.awt.Font("Segoe UI Semibold", 0, 24)); // NOI18N
@@ -86,22 +90,24 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        txtContrasena.setBackground(new java.awt.Color(255, 255, 255));
+        txtContrasena.setForeground(new java.awt.Color(0, 0, 0));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE))
-                        .addComponent(txtUsuario)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
+                    .addComponent(txtUsuario)
+                    .addComponent(txtContrasena))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -111,11 +117,11 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(12, 12, 12)
                 .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(13, 13, 13)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(7, 7, 7)
+                .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogin)
                     .addComponent(btnSalir))
@@ -142,7 +148,7 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,7 +184,7 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
      String usuario = txtUsuario.getText().trim();
-     String contrasena = txtContraseña.getText().trim();
+     String contrasena = txtContrasena.getText().trim();
      
      // se validan los campos que no esten vacios
      if (usuario.isEmpty() || usuario.equals("Ingrese su nombre de usuario")|| contrasena.isEmpty()|| contrasena.equals("Ingrese su contraseña")){
@@ -188,7 +194,7 @@ public class Login extends javax.swing.JFrame {
      
      CuentaDAO cuenta = new CuentaDAO();
      if (cuenta.validarLogin(usuario, contrasena)){
-         javax.swing.JOptionPane.showMessageDialog(this, "Bienvenido " + Sesion.usuarioActual + "\n Cargo" + Sesion.cargoActual, " Acceso autorizado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+         javax.swing.JOptionPane.showMessageDialog(this, "Bienvenido  " + Sesion.usuarioActual + "\n Cargo" + Sesion.cargoActual, " Acceso autorizado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
          
           //se abre el menu principal
          new VentanaMenuPrincipal().setVisible(true);
@@ -200,13 +206,23 @@ public class Login extends javax.swing.JFrame {
         {
             javax.swing.JOptionPane.showMessageDialog(this, "El usuario o la contraseña son incorrectos", "Acceso denegado", javax.swing.JOptionPane.ERROR_MESSAGE);
             txtUsuario.setText(" ");
-            txtContraseña.setText(" ");
+            txtContrasena.setText(" ");
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    //metodo de ocultamiento de las letras que se encuentran en el jtexfield al hacer click 
+    // cuando comience a escribir la persona
+    private void txtUsuarioFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsuarioFocusGained
+    }//GEN-LAST:event_txtUsuarioFocusGained
+    
+    private void txtUsuarioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsuarioFocusLost
+
+
+    }//GEN-LAST:event_txtUsuarioFocusLost
 
     /**
      * @param args the command line arguments
@@ -253,7 +269,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField txtContraseña;
+    private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

@@ -360,8 +360,9 @@ catch (java.sql.SQLException e){
        }
     }//GEN-LAST:event_btnGenerarReporteActionPerformed
 
+    //me llevara al menu de registrar prestamos
     private void btnPrestarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrestarActionPerformed
-      
+        new FormularioPrestamo().setVisible(true);
     }//GEN-LAST:event_btnPrestarActionPerformed
 
     private void btnAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarUsuarioActionPerformed

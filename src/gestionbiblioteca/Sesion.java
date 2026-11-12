@@ -12,7 +12,7 @@ public class Sesion {
     
     //se hace el guardado del valor de la columna cargo en la base de datos
     public static boolean esAdmin(){
-        return "ADMINISTRADOR".equalsIgnoreCase(cargoActual)|| "ADMIN".equalsIgnoreCase(cargoActual);
+        return " ADMINISTRADOR".equalsIgnoreCase(cargoActual)|| " ADMIN".equalsIgnoreCase(cargoActual);
     }
     
     public static void cerrarSesion(){

@@ -2,7 +2,7 @@ package gestionbiblioteca;
 
 /**
  *
- * @author guzman
+ * @author Gabriel Guzman
  */
 //herencia de la clase padre que es material bibliografico
 public class Libro extends MaterialBibliografico {

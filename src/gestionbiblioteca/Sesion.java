@@ -2,7 +2,7 @@ package gestionbiblioteca;
 
 /**
  *
- * @author GuzZman
+ * @author Gabriel GuzZman
  */
 public class Sesion {
 

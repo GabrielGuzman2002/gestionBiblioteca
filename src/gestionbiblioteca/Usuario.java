@@ -3,7 +3,7 @@ import java.time.LocalDate;
 
 /**
  *
- * @author Fernando
+ * @author Fernando Ruano
  */
 public class Usuario {
 

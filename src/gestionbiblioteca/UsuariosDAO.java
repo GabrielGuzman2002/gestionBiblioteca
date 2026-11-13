@@ -12,7 +12,7 @@ import java.util.List;
  * Esta clase es para poder manejar las operaciones que se van a realizar en la
  * tabla de usuarios a la base de datos
  *
- * @author GuzZman
+ * @author Gabriel GuzZman
  */
 public class UsuariosDAO {
 

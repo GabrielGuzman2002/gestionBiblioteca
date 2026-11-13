@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
  *
- * @author GuzZman
+ * @author Gabriel GuzZman
  */
 public class VentanaUsuario extends javax.swing.JFrame {
 

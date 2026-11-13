@@ -6,7 +6,7 @@ package gestionbiblioteca;
 
 /**
  *
- * @author GuzZman
+ * @author Gabriel GuzZman
  */
 public class Login extends javax.swing.JFrame {
 

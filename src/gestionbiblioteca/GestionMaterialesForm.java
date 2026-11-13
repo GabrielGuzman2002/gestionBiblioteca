@@ -6,7 +6,7 @@ package gestionbiblioteca;
 
 /**
  *
- * @author Fernando
+ * @author Fernando Ruano
  */
 public class GestionMaterialesForm extends javax.swing.JFrame {
 

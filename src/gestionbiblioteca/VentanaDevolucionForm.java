@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author GuzZman
+ * @author Gabriel GuzZman
  */
 public class VentanaDevolucionForm extends javax.swing.JFrame {
 

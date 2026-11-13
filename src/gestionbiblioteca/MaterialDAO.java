@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * 
- * author FernandoGarcia
+ * author Fernando Garcia
  * Operaciones de la base de datos para los materiales (libros y revistas).
  * Guarda siempre el tipo, asi el programa sabe si es libro o revista.
  */

@@ -2,7 +2,7 @@ package gestionbiblioteca;
 
 /**
  *
- * @author guzman
+ * @author Gabriel Guzman
  */
 public class Revista extends MaterialBibliografico {
 

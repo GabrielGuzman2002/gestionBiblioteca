@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author GuzZman
+ * @author Gabriel GuzZman
  */
 public class CuentaDAO {
     

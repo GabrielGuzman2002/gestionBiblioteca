@@ -10,7 +10,7 @@ import javax.swing.UIManager;
  *Este es el punto de entrada principal del sistema de gestion de biblioteca
  * lo que se hace es que inicia directamente en la interfazgrafica de la venta
  * de login
- * @author guzman
+ * @author Gabriel Guzman
  */
 public class Main {
 

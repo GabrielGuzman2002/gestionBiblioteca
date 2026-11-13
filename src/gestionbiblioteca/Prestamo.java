@@ -3,7 +3,7 @@ import java.time.LocalDate;
 
 /**
  *
- * @author guzman
+ * @author Gabriel Guzman
  */
 public class Prestamo {
     

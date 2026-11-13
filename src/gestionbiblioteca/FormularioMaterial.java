@@ -29,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
  * Formulario Swing para gestionar libros y revistas:
  * registrar (1.1, 1.2, 1.3), buscar (1.4), consultar (1.5), modificar (1.6) y eliminar (1.7).
  * Para modificar o eliminar se selecciona una fila de la tabla.
+ * author Fernando Ruano
  */
 public class FormularioMaterial extends JFrame {
 

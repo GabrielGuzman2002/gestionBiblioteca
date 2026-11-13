@@ -1,7 +1,7 @@
 package gestionbiblioteca;
 /**
  *Clase base de los materiales de la biblioteca (libros y revistas).
- * @author guzman
+ * @author Gabriel Guzman
  */
 
 public abstract class MaterialBibliografico {
